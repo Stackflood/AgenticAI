@@ -1,0 +1,7 @@
+install Graphviz
+ winget install Graphviz.Graphviz
+
+then run 
+uv add graphviz
+
+open vscode again
