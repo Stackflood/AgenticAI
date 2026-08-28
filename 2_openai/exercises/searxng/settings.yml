@@ -1,0 +1,8 @@
+use_default_settings: true
+server:
+  secret_key: "my_secret_key_12345"
+  limiter: false
+search:
+  formats:
+    - html
+    - json
