@@ -38,11 +38,22 @@ class ResearchManager:
         result = await Runner.run(search_agent, input_message)
         return result.final_output
 
+    # async def write_report(self, query: str, search_results: list[str]) -> ReportData:
+    #     """ Write the report for the query """
+    #     input_message = f"Original query: {query}\nSummarized search results: {search_results}"
+    #     result = await Runner.run(writer_agent, input_message)
+    #     return result.final_output
+    
     async def write_report(self, query: str, search_results: list[str]) -> ReportData:
-        """ Write the report for the query """
+        print("Thinking about report...")
         input_message = f"Original query: {query}\nSummarized search results: {search_results}"
         result = await Runner.run(writer_agent, input_message)
-        return result.final_output
+        print("Finished writing report")
+        return ReportData(
+            short_summary=result.final_output[:500],
+            markdown_report=result.final_output,
+            follow_up_questions=[],
+        )
     
     async def send_email(self, report: ReportData) -> None:
         await Runner.run(email_agent, report.markdown_report)

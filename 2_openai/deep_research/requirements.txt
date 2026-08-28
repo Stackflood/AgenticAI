@@ -3,4 +3,5 @@ python-dotenv
 openai
 openai-agents
 gradio
+ddgs
 requests
