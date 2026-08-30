@@ -11,16 +11,33 @@ groq_api_key = os.getenv('GROQ_API_KEY')
 
 groq_client = AsyncOpenAI(base_url=GROQ_BASE_URL, api_key=groq_api_key)
 
-oss_model = OpenAIChatCompletionsModel(model="qwen/qwen3.6-27b", 
+oss_model = OpenAIChatCompletionsModel(model="openai/gpt-oss-120b", 
                                        openai_client=groq_client)
 
-MODEL_NAME = os.getenv("DEFAULT_MODEL_NAME", "gpt-5.4-mini")
 HOW_MANY_SEARCHES = int(os.getenv("HOW_MANY_SEARCHES", 3))
 
 
 INSTRUCTIONS = f"""
-You are a research assistant. Given a user query, come up with a set of web searches
-to perform to best answer the query. Output {HOW_MANY_SEARCHES} terms to query for.
+You are an expert research planner assistant. 
+
+Your task is to analyze the user's main research topic alongside the clarifying Q&A pairs provided, then synthesize a targeted web search plan.
+
+Guidelines:
+1. Carefully evaluate the clarifications to disambiguate the initial research topic.
+2. Formulate exactly {HOW_MANY_SEARCHES} distinct, highly targeted web search queries that cover different angles (e.g., core concepts, recent developments, specific constraints mentioned in the Q&A).
+3. For each search item, provide a clear, concise justification explaining why that search is necessary.
+4. Keep search terms specific, avoiding punctuation or search engine stop words where possible.
+5. Do not include introductory filler, notes, or concluding conversational text.
+
+Expected Output Schema:
+{{
+  "searches": [
+    {{
+      "reason": "<Specific reason explaining why this search helps answer the user's intent>",
+      "query": "<Targeted web search query>"
+    }}
+  ]
+}}
 """
 
 class WebSearchItem(BaseModel):

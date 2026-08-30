@@ -13,7 +13,6 @@ groq_client = AsyncOpenAI(base_url=GROQ_BASE_URL, api_key=groq_api_key)
 oss_model = OpenAIChatCompletionsModel(model="openai/gpt-oss-120b", 
                                        openai_client=groq_client)
 
-MODEL_NAME = os.getenv("DEFAULT_MODEL_NAME", "gpt-5.4-mini")
 
 INSTRUCTIONS = """
 You are a senior researcher tasked with writing a cohesive report for a research query.

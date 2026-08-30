@@ -10,7 +10,6 @@ GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
 
 
 load_dotenv(override=True)
-MODEL_NAME = os.getenv("DEFAULT_MODEL_NAME", "gpt-5.4-mini")
 gemini_client = AsyncOpenAI(base_url=GEMINI_BASE_URL, api_key=google_api_key)
 
 gemini_model = OpenAIChatCompletionsModel(model="gemini-3.1-flash-lite", openai_client=gemini_client)
@@ -50,4 +49,4 @@ settings = ModelSettings(tool_choice="required")
 tools = [search_web_duckduckgo]
 
 search_agent = Agent(name="Search Agent", instructions=INSTRUCTIONS, tools=tools, 
-                     model=MODEL_NAME, model_settings=settings)
+                     model=MODEL_NAME_GEMINI, model_settings=settings)
