@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "ask-docs": {
+      "source": "crewaiinc/skills",
+      "sourceType": "github",
+      "skillPath": "skills/ask-docs/SKILL.md",
+      "computedHash": "afd384df912cb3b56d2c2a1a11e6f9c82f078cf9b3eedcac2e4bf990e42912ba"
+    }
+  }
+}
