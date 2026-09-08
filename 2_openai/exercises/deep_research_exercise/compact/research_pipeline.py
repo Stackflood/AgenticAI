@@ -22,6 +22,17 @@ groq_client = AsyncOpenAI(
     api_key=GROQ_API_KEY
 )
 
+local_client = AsyncOpenAI(
+    base_url="http://localhost:11434/v1",
+    api_key="ollama"  # Required by the SDK, but ignored by Ollama
+)
+
+# Bind the local client to the OpenAIChatCompletionsModel wrapper
+model_llama = OpenAIChatCompletionsModel(
+    model="llama3.2",
+    openai_client=local_client
+)
+
 model_openai = OpenAIChatCompletionsModel(
     model="openai/gpt-oss-120b",
     openai_client=groq_client
@@ -115,7 +126,7 @@ planner_agent = Agent(
     Formulate exactly {HOW_MANY_SEARCHES} distinct, targeted search queries covering different angles.
     Do not include introductory filler or notes.
     """,
-    model=model_qwen,
+    model=model_openai,
     output_type=PlannerOutput
 )
 
@@ -141,7 +152,7 @@ writer_agent = Agent(
     for 3-5 pages of content, at least 700 words.
     Return only the Markdown report, without JSON or code fences.
     """,
-    model=model_qwen,
+    model=model_openai,
 )
 
 # 5. Email Agent
@@ -159,9 +170,9 @@ email_agent = Agent(
 
 research_manager_agent = Agent(
     name="ResearchManagerAgent",
-    model_settings=ModelSettings(
-        max_tokens=5000
-    ),    
+    # model_settings=ModelSettings(
+    #     max_tokens=5000
+    # ),    
     instructions="""
     You are the primary Research Manager. You orchestrate an end-to-end deep research pipeline using your sub-agent tools:
     1. Evaluate the topic and user clarifications provided.
@@ -171,7 +182,7 @@ research_manager_agent = Agent(
     5. Dispatch the report via email using `email_tool` if an email is provided.
     6. Return the final markdown report directly as your final response.
     """,
-    model=model_openai,
+    model=model_llama,
     tools=[
         qa_agent.as_tool(tool_name="clarification_tool", tool_description="Generates clarifying questions."),
         planner_agent.as_tool(tool_name="planner_tool", tool_description="Plans targeted search queries based on Q&A context."),

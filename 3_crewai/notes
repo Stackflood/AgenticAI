@@ -1,0 +1,3 @@
+to see traces in crewai authentication is required
+
+crewai login and set tracing enabled for crewai in ,env global file
