@@ -1,0 +1,6 @@
+llm: groq/openai/gpt-oss-120b
+  llm: groq/qwen/qwen3.8-27b
+  llm: groq/openai/gpt-oss-20b
+  llm: groq/qwen/qwen3.6-27b
+
+  models that can be used with groq with 800 rpm
