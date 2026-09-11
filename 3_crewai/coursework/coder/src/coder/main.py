@@ -4,6 +4,8 @@ import warnings
 
 from datetime import datetime
 
+from graphviz.backend import Render
+
 from coder.crew import Coder
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
@@ -19,18 +21,27 @@ assignment = 'Write a python program to calculate the first 1,000,000 terms \
 assignment2 = 'Write a python program to create a database with Teacher and Student as ' \
 'tables with one Teacher teaching multiple students ' \
 'and one student being taught by multiple students. Fill the database with atleast a 100 records' \
-'for both students and teacher. Have students and teachers from multiple classes. Finally show ' \
+'for both students and teacher.Give real Indian names to both students and teacheres. Have students and teachers from multiple classes. Finally show ' \
 'these on the prompt by means of a clean diagram. Create ' \
 'as many desired tables as possible to complete this assignemnet. Code should be clean ' \
-'without any clutter.'
+'without any clutter.Delete data from previous database to fill new entries. Use already written code if available.'
+
+assignment3 = 'Build a clean, dependency-free Tic-Tac-Toe ' \
+'(3x3) game in Python and simulate a full game between two automated dummy players.' \
+'Dummy Player Behavior: Implement two automated players (Player X and Player O). '\
+'Each turn, the active dummy player randomly selects an available cell from the remaining empty spots.'\
+
+'Execution & Output:vPrint the empty board at the start.'\
+
+'Render the updated board to stdout after every move, clearly labeling whose turn it was and what position they chose.'
 
 def run():
     """
     Run the crew.
     """
     inputs = {
-        'assignment': assignment
-    }
+            'assignment': assignment3
+        }
 
     try:
         Coder().crew().kickoff(inputs=inputs)
