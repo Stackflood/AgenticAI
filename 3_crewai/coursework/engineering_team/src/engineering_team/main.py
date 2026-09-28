@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 import sys
 import warnings
+import os
 import litellm
 
 from datetime import datetime
-
+from .tools.sandbox_tools import reset_sandbox
 from engineering_team.crew import EngineeringTeam
 
+os.environ["LITELLM_REQUEST_TIMEOUT"] = "1800"
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
 # This main file is intended to be a way for you to run your
@@ -14,8 +16,9 @@ warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 # Replace with inputs you want to test with, it will automatically
 # interpolate any tasks and agents information
 
-litellm.num_retries = 5
-litellm.request_timeout = 60
+# litellm.num_retries = 5
+# litellm.request_timeout = 60
+
 
 requirements = """
 A simple account management system for a trading simulation platform.
@@ -39,7 +42,10 @@ def run():
     }
 
     try:
-        EngineeringTeam().kickoff_with_retry(inputs=inputs)
+        reset_sandbox();
+        EngineeringTeam().crew().kickoff(inputs=inputs)
+
+        # EngineeringTeam().kickoff_with_retry(inputs=inputs)
         # EngineeringTeam() result = engineering_team.kickoff_with_retry()
     except Exception as e:
         raise Exception(f"An error occurred while running the crew: {e}")

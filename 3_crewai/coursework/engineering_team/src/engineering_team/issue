@@ -1,0 +1,206 @@
+
+  File "D:\ArtificialIntelligence\agents\3_crewai\coursework\engineering_team\.venv\Lib\site-packages\crewai\agent\core.py", line 823, in _execute_with_timeout
+    return future.result(timeout=timeout)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\krsna\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\concurrent\futures\_base.py", line 462,in result
+    raise TimeoutError()
+TimeoutError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\ArtificialIntelligence\agents\3_crewai\coursework\engineering_team\src\engineering_team\main.py", line 46, in run
+    EngineeringTeam().crew().kickoff(inputs=inputs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "D:\ArtificialIntelligence\agents\3_crewai\coursework\engineering_team\.venv\Lib\site-packages\crewai\crew.py", line 956, in kickoff
+    result = self._run_sequential_process()
+  File "D:\ArtificialIntelligence\agents\3_crewai\coursework\engineering_team\.venv\Lib\site-packages\crewai\crew.py", line 1399, in _run_sequential_process
+    return self._execute_tasks(self.tasks)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "D:\ArtificialIntelligence\agents\3_crewai\coursework\engineering_team\.venv\Lib\site-packages\crewai\crew.py", line 1496, in _execute_tasks
+    task_output = task.execute_sync(
+        agent=exec_data.agent,
+        context=context,
+        tools=exec_data.tools,
+    )
+  File "D:\ArtificialIntelligence\agents\3_crewai\coursework\engineering_team\.venv\Lib\site-packages\crewai\task.py", line 581, in execute_sync
+    return self._execute_core(agent, context, tools)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\ArtificialIntelligence\agents\3_crewai\coursework\engineering_team\.venv\Lib\site-packages\crewai\task.py", line 878, in _execute_core
+    raise e  # Re-raise the exception after emitting the event
+    ^^^^^^^
+  File "D:\ArtificialIntelligence\agents\3_crewai\coursework\engineering_team\.venv\Lib\site-packages\crewai\task.py", line 785, in _execute_core
+    result = agent.execute_task(
+        task=self,
+        context=context,
+        tools=tools,
+    )
+  File "D:\ArtificialIntelligence\agents\3_crewai\coursework\engineering_team\.venv\Lib\site-packages\crewai\agent\core.py", line 792, in execute_task
+    raise e
+  File "D:\ArtificialIntelligence\agents\3_crewai\coursework\engineering_team\.venv\Lib\site-packages\crewai\agent\core.py", line 777, in execute_task
+    result = self._execute_with_timeout(
+        task_prompt, task, self.max_execution_time
+    )
+  File "D:\ArtificialIntelligence\agents\3_crewai\coursework\engineering_team\.venv\Lib\site-packages\crewai\agent\core.py", line 826, in _execute_with_timeout
+    raise TimeoutError(
+        f"Task '{task.description}' execution timed out after {timeout} seconds. Consider increasing max_execution_time or optimizing the task."
+    ) from e
+TimeoutError: Task 'Write a python code that implements the design described by the engineering lead, in order to achieve therequirements. Here are the requirements: 
+A simple account management system for a trading simulation platform.
+The system should allow users to create an account, deposit funds, and withdraw funds.
+The system should allow users to record that they have bought or sold shares, providing a quantity.
+The system should calculate the total value of the user's portfolio, and the profit or loss from the initial deposit.
+The system should be able to report the holdings of the user at any point in time.
+The system should be able to report the profit or loss of the user at any point in time.
+The system should be able to list the transactions that the user has made over time.
+The system should prevent the user from withdrawing funds that would leave them with a negative balance, or
+ from buying more shares than they can afford, or selling shares that they don't have.
+ The system has access to a function get_share_price(symbol) which returns the current price of a share, and includes a test implementation that returns fixed prices for AAPL, TSLA, GOOGL.
+
+' execution timed out after 1800 seconds. Consider increasing max_execution_time or optimizing the task.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\ArtificialIntelligence\agents\3_crewai\coursework\engineering_team\.venv\Scripts\run_crew.exe\__main__.py", line 10, in <module>
+    sys.exit(run())
+             ~~~^^
+  File "D:\ArtificialIntelligence\agents\3_crewai\coursework\engineering_team\src\engineering_team\main.py", line 51, in run
+    raise Exception(f"An error occurred while running the crew: {e}")
+Exception: An error occurred while running the crew: Task 'Write a python code that implements the design described by the engineering lead, in order to achieve the requirements. Here are the requirements: 
+A simple account management system for a trading simulation platform.
+The system should allow users to create an account, deposit funds, and withdraw funds.
+The system should allow users to record that they have bought or sold shares, providing a quantity.
+The system should calculate the total value of the user's portfolio, and the profit or loss from the initial deposit.
+The system should be able to report the holdings of the user at any point in time.
+The system should be able to report the profit or loss of the user at any point in time.
+The system should be able to list the transactions that the user has made over time.
+The system should prevent the user from withdrawing funds that would leave them with a negative balance, or
+ from buying more shares than they can afford, or selling shares that they don't have.
+ The system has access to a function get_share_price(symbol) which returns the current price of a share, and includes a test implementation that returns fixed prices for AAPL, TSLA, GOOGL.
+
+' execution timed out after 1800 seconds. Consider increasing max_execution_time or optimizing the task.
+
+==========================================================================================
+"/v1/chat/completions"
+time=2026-09-24T16:51:58.656+05:30 level=WARN source=runner.go:584 msg="llama-server GPU discovery watchdog timed out" OLLAMA_LIBRARY_PATH="[C:\\Users\\krsna\\AppData\\Local\\Programs\\Ollama\\lib\\ollama C:\\Users\\krsna\\AppData\\Local\\Programs\\Ollama\\lib\\ollama\\cuda_v13]" extra_envs=map[CUDA_VISIBLE_DEVICES:0] error="context deadline exceeded"
+time=2026-09-24T16:51:58.656+05:30 level=INFO source=runner.go:522 msg="failure during llama-server GPU discovery" OLLAMA_LIBRARY_PATH="[C:\\Users\\krsna\\AppData\\Local\\Programs\\Ollama\\lib\\ollama C:\\Users\\krsna\\AppData\\Local\\Programs\\Ollama\\lib\\ollama\\cuda_v13]" extra_envs=map[CUDA_VISIBLE_DEVICES:0] error="context deadline exceeded" detail=""
+time=2026-09-24T16:51:58.656+05:30 level=WARN source=runner.go:364 msg="unable to refresh free memory, using old values"
+time=2026-09-24T16:51:58.660+05:30 level=WARN source=llama_server.go:130 msg="llama-server discovery: timed out waiting for server startup" error="context deadline exceeded" libDirs="[C:\\Users\\krsna\\AppData\\Local\\Programs\\Ollama\\lib\\ollama C:\\Users\\krsna\\AppData\\Local\\Programs\\Ollama\\lib\\ollama\\cuda_v13]" lines_captured=0
+time=2026-09-24T16:52:00.155+05:30 level=WARN source=runner.go:584 msg="llama-server GPU discovery watchdog timed out" OLLAMA_LIBRARY_PATH="[C:\\Users\\krsna\\AppData\\Local\\Programs\\Ollama\\lib\\ollama C:\\Users\\krsna\\AppData\\Local\\Programs\\Ollama\\lib\\ollama\\cuda_v13]" extra_envs=map[CUDA_VISIBLE_DEVICES:0] error="context deadline exceeded"
+time=2026-09-24T16:52:00.155+05:30 level=INFO source=runner.go:522 msg="failure during llama-server GPU discovery" OLLAMA_LIBRARY_PATH="[C:\\Users\\krsna\\AppData\\Local\\Programs\\Ollama\\lib\\ollama C:\\Users\\krsna\\AppData\\Local\\Programs\\Ollama\\lib\\ollama\\cuda_v13]" extra_envs=map[CUDA_VISIBLE_DEVICES:0] error="context deadline exceeded" detail=""
+time=2026-09-24T16:52:00.156+05:30 level=WARN source=runner.go:364 msg="unable to refresh free memory, using old values"
+time=2026-09-24T16:52:00.720+05:30 level=WARN source=llama_server.go:130 msg="llama-server discovery: timed out waiting for server startup" error="context deadline exceeded" libDirs="[C:\\Users\\krsna\\AppData\\Local\\Programs\\Ollama\\lib\\ollama C:\\Users\\krsna\\AppData\\Local\\Programs\\Ollama\\lib\\ollama\\cuda_v13]" lines_captured=0
+time=2026-09-24T17:31:10.178+05:30 level=INFO source=sched.go:1147 msg="disabling mmap for llama-server load by default" model=D:\Ollama\models\blobs\sha256-a3de86cd1c132c822487ededd47a324c50491393e6565cd14bafa40d0b8e686f reason=windows_cuda
+time=2026-09-24T17:31:10.178+05:30 level=INFO source=server.go:109 msg="using llama-server for model" model=D:\Ollama\models\blobs\sha256-a3de86cd1c132c822487ededd47a324c50491393e6565cd14bafa40d0b8e686f
+time=2026-09-24T17:31:10.188+05:30 level=INFO source=llama_server.go:433 msg="starting llama-server" cmd="C:\\Users\\krsna\\AppData\\Local\\Programs\\Ollama\\lib\\ollama\\llama-server.exe --model D:\\Ollama\\models\\blobs\\sha256-a3de86cd1c132c822487ededd47a324c50491393e6565cd14bafa40d0b8e686f --port 53638 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --load-mode none --flash-attn auto -b 512 -ub 512 --context-shift --keep 4"
+time=2026-09-24T17:31:10.196+05:30 level=INFO source=sched.go:613 msg="system memory" total="15.8 GiB" free="5.8 GiB" free_swap="9.2 GiB"
+time=2026-09-24T17:31:10.196+05:30 level=INFO source=sched.go:620 msg="gpu memory" id=0 library=CUDA available="2.8 GiB" free="3.2 GiB" minimum="457.0 MiB" overhead="0 B"
+time=2026-09-24T17:31:10.196+05:30 level=INFO source=llama_server.go:1048 msg="loading model via llama-server" model=D:\Ollama\models\blobs\sha256-a3de86cd1c132c822487ededd47a324c50491393e6565cd14bafa40d0b8e686f
+time=2026-09-24T17:31:10.196+05:30 level=INFO source=llama_server.go:1295 msg="waiting for llama-server to start responding"
+time=2026-09-24T17:31:10.197+05:30 level=INFO source=llama_server.go:1350 msg="waiting for llama-server to become available" status="llm server error"
+cmn  common_param: common_params_print_info: build 1 (0f3a71be1) with Clang 18.1.8 for Windows AMD64
+cmn  common_param: common_params_print_info: verbosity = 4 (adjust with the `-lv N` CLI arg)
+cmn  common_param: device_info:
+cmn  common_param:   - CPU     : Intel(R) Core(TM) i5-10200H CPU @ 2.40GHz (16160 MiB, 5725 MiB free)
+cmn  common_param:   - CUDA0   : NVIDIA GeForce GTX 1650 Ti (4095 MiB, 3290 MiB free)
+cmn  common_param: system_info: n_threads = 4 (n_threads_batch = 4) / 8 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | CUDA : ARCHS = 750,800,860,890,1000,1200 | USE_GRAPHS = 1 |
+srv          init: using 7 threads for HTTP server
+srv          init: The UI is disabled
+srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+srv  llama_server: -----------------
+srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+srv  llama_server: this can be a security risk (cross-origin attacks)
+srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+srv  llama_server: -----------------
+srv         start: binding port with default address family
+srv    load_model: loading model 'D:\Ollama\models\blobs\sha256-a3de86cd1c132c822487ededd47a324c50491393e6565cd14bafa40d0b8e686f'
+srv    load_model: local path 'D:\Ollama\models\blobs\sha256-a3de86cd1c132c822487ededd47a324c50491393e6565cd14bafa40d0b8e686f'
+cmn  common_init_: fitting params to device memory ...
+cmn  common_init_: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+common_params_fit_impl: getting device memory data for initial parameters:
+time=2026-09-24T17:31:11.200+05:30 level=INFO source=llama_server.go:1350 msg="waiting for llama-server to become available" status="llm server loading model"
+common_memory_breakdown_print: | memory breakdown [MiB]  | total   free    self   model   context   compute    unaccounted |
+common_memory_breakdown_print: |   - CUDA0 (GTX 1650 Ti) |  4095 = 3290 + (5319 =  4643 +     576 +     100) +       -4514 |
+common_memory_breakdown_print: |   - Host                |                  353 =   333 +       0 +      20                |
+common_params_fit_impl: projected to use 5319 MiB of device memory vs. 3290 MiB of free device memory
+common_params_fit_impl: cannot meet free memory target of 1024 MiB, need to reduce device memory by 3053 MiB
+common_params_fit_impl: context size set by user to 4096 -> no change
+common_params_fit_impl: id=0, target=2266 MiB
+common_memory_breakdown_print: | memory breakdown [MiB]  | total   free    self   model   context   compute    unaccounted |
+common_memory_breakdown_print: |   - CUDA0 (GTX 1650 Ti) |  4095 = 3290 + ( 111 =     0 +       0 +     111) +         693 |
+common_memory_breakdown_print: |   - Host                |                 5573 =  4977 +     576 +      20                |
+common_params_fit_impl: memory for test allocation by device:
+common_params_fit_impl: id=0, n_layer= 0, n_part= 0, overflow_type=4, mem=   111 MiB
+common_params_fit_impl: filling dense layers back-to-front:
+common_memory_breakdown_print: | memory breakdown [MiB]  | total   free    self   model   context   compute    unaccounted |
+common_memory_breakdown_print: |   - CUDA0 (GTX 1650 Ti) |  4095 = 3290 + (5319 =  4643 +     576 +     100) +       -4514 |
+common_memory_breakdown_print: |   - Host                |                  353 =   333 +       0 +      20                |
+common_params_fit_impl: memory for test allocation by device:
+common_params_fit_impl: id=0, n_layer=37, n_part= 0, overflow_type=4, mem=  5319 MiB
+common_params_fit_impl: start filling device 0, delta=37
+common_memory_breakdown_print: | memory breakdown [MiB]  | total   free    self   model   context   compute    unaccounted |
+common_memory_breakdown_print: |   - CUDA0 (GTX 1650 Ti) |  4095 = 3290 + (2463 =  2115 +     224 +     123) +       -1658 |
+common_memory_breakdown_print: |   - Host                |                 3233 =  2861 +     352 +      20                |
+common_params_fit_impl: memory for test allocation by device:
+common_params_fit_impl: id=0, n_layer=15, n_part= 0, overflow_type=4, mem=  2463 MiB
+common_params_fit_impl: set ngl_per_device_high[0].n_layer=15
+common_memory_breakdown_print: | memory breakdown [MiB]  | total   free    self   model   context   compute    unaccounted |
+common_memory_breakdown_print: |   - CUDA0 (GTX 1650 Ti) |  4095 = 3290 + (2200 =  1897 +     192 +     111) +       -1395 |
+common_memory_breakdown_print: |   - Host                |                 3484 =  3080 +     384 +      20                |
+common_params_fit_impl: memory for test allocation by device:
+common_params_fit_impl: id=0, n_layer=13, n_part= 0, overflow_type=4, mem=  2200 MiB
+common_params_fit_impl: set ngl_per_device[0].n_layer=13
+common_memory_breakdown_print: | memory breakdown [MiB]  | total   free    self   model   context   compute    unaccounted |
+common_memory_breakdown_print: |   - CUDA0 (GTX 1650 Ti) |  4095 = 3290 + (2325 =  2006 +     208 +     111) +       -1520 |
+common_memory_breakdown_print: |   - Host                |                 3359 =  2971 +     368 +      20                |
+common_params_fit_impl: memory for test allocation by device:
+common_params_fit_impl: id=0, n_layer=14, n_part= 0, overflow_type=4, mem=  2325 MiB
+common_params_fit_impl: set ngl_per_device_high[0].n_layer=14
+common_params_fit_impl:   - CUDA0 (NVIDIA GeForce GTX 1650 Ti): 13 layers,   2200 MiB used,   1090 MiB free
+common_fit_params: successfully fit params to free device memory
+common_fit_params: fitting params to free memory took 2.47 seconds
+llama_model_loader: loaded meta data with 28 key-value pairs and 399 tensors from D:\Ollama\models\blobs\sha256-a3de86cd1c132c822487ededd47a324c50491393e6565cd14bafa40d0b8e686f (version GGUF V3 (latest))
+llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+llama_model_loader: - kv   0:                       general.architecture str              = qwen3
+llama_model_loader: - kv   1:                               general.type str              = model
+llama_model_loader: - kv   2:                               general.name str              = Qwen3 8B
+llama_model_loader: - kv   3:                           general.basename str              = Qwen3
+llama_model_loader: - kv   4:                         general.size_label str              = 8B
+llama_model_loader: - kv   5:                            general.license str              = apache-2.0
+llama_model_loader: - kv   6:                          qwen3.block_count u32              = 36
+llama_model_loader: - kv   7:                       qwen3.context_length u32              = 40960
+llama_model_loader: - kv   8:                     qwen3.embedding_length u32              = 4096
+llama_model_loader: - kv   9:                  qwen3.feed_forward_length u32              = 12288
+llama_model_loader: - kv  10:                 qwen3.attention.head_count u32              = 32
+llama_model_loader: - kv  11:              qwen3.attention.head_count_kv u32              = 8
+llama_model_loader: - kv  12:                       qwen3.rope.freq_base f32              = 1000000.000000
+llama_model_loader: - kv  13:     qwen3.attention.layer_norm_rms_epsilon f32              = 0.000001
+llama_model_loader: - kv  14:                 qwen3.attention.key_length u32              = 128
+llama_model_loader: - kv  15:               qwen3.attention.value_length u32              = 128
+llama_model_loader: - kv  16:                       tokenizer.ggml.model str              = gpt2
+llama_model_loader: - kv  17:                         tokenizer.ggml.pre str              = qwen2
+llama_model_loader: - kv  18:                      tokenizer.ggml.tokens arr[str,151936]  = ["!", "\"", "#", "$", "%", "&", "'", ...
+llama_model_loader: - kv  19:                  tokenizer.ggml.token_type arr[i32,151936]  = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+llama_model_loader: - kv  20:                      tokenizer.ggml.merges arr[str,151387]  = ["Ġ Ġ", "ĠĠ ĠĠ", "i n", "Ġ t",...
+llama_model_loader: - kv  21:                tokenizer.ggml.eos_token_id u32              = 151645
+llama_model_loader: - kv  22:            tokenizer.ggml.padding_token_id u32              = 151643
+llama_model_loader: - kv  23:                tokenizer.ggml.bos_token_id u32              = 151643
+llama_model_loader: - kv  24:               tokenizer.ggml.add_bos_token bool             = false
+llama_model_loader: - kv  25:                    tokenizer.chat_template str              = {%- if tools %}\n    {{- '<|im_start|>...
+llama_model_loader: - kv  26:               general.quantization_version u32              = 2
+llama_model_loader: - kv  27:                          general.file_type u32              = 15
+llama_model_loader: - type  f32:  145 tensors
+llama_model_loader: - type  f16:   36 tensors
+llama_model_loader: - type q4_K:  199 tensors
+llama_model_loader: - type q6_K:   19 tensors
+print_info: file format = GGUF V3 (latest)
+print_info: file type   = Q4_K - Medium
+print_info: file size   = 4.86 GiB (5.10 BPW)
+llama_prepare_model_devices: using device CUDA0 (NVIDIA GeForce GTX 1650 Ti) (0000:01:00.0) - 3290 MiB free
+load: 0 unused tokens
+load: control-looking token: 128247 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
+load: printing all EOG tokens:
+=========================================================================================

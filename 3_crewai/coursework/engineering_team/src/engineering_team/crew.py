@@ -1,7 +1,7 @@
 import time
 import re
 
-from crewai import Agent, Crew, Process, Task
+from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 
@@ -15,6 +15,17 @@ class EngineeringTeam:
     agents: list[BaseAgent]
     tasks: list[Task]
 
+    llm = LLM(
+        model="ollama/qwen3:8b",
+        timeout=18000,
+        temperature=0.2,
+        extra_body={
+        "options": {
+            "num_ctx": 8192
+            }
+        }
+    )
+
     # ---------------------------------------------------------
     # AGENTS
     # ---------------------------------------------------------
@@ -23,6 +34,7 @@ class EngineeringTeam:
     def engineering_lead(self) -> Agent:
         return Agent(
             config=self.agents_config["engineering_lead"],
+            llm=self.llm,
             verbose=False,
             max_iter=2,
             max_retry_limit=2,
@@ -33,6 +45,7 @@ class EngineeringTeam:
     def backend_engineer(self) -> Agent:
         return Agent(
             config=self.agents_config["backend_engineer"],
+            llm=self.llm,
             verbose=False,
             max_iter=2,
             max_retry_limit=2,
@@ -43,6 +56,7 @@ class EngineeringTeam:
     def frontend_engineer(self) -> Agent:
         return Agent(
             config=self.agents_config["frontend_engineer"],
+            llm=self.llm,
             verbose=False,
             max_iter=2,
             max_retry_limit=2,
@@ -54,7 +68,9 @@ class EngineeringTeam:
     def test_engineer(self) -> Agent:
         return Agent(
             config=self.agents_config["test_engineer"],
+            llm=self.llm,
             verbose=False,
+            tracing = True,
             max_iter=2,
             max_retry_limit=2,
             tools=sandbox_tools,
