@@ -1,0 +1,850 @@
+builder.add_conditional_edges("chatbot", tools_condition, {"tools": "tools", END:"translator"})
+In details : 
+
+
+Absolutely. This line is the routing decision point in your LangGraph:
+
+builder.add_conditional_edges(
+    "chatbot",
+    tools_condition,
+    {"tools": "tools", END: "translator"}
+)
+
+It is easiest to understand if we first translate it into plain English:
+
+After chatbot finishes, run tools_condition to decide where to go next. If the condition returns "tools", go to the tools node. If it returns END, go to the translator node.
+
+There are several important details hidden in this one line, especially the distinction between the value returned by tools_condition and the node name you want to route to.
+
+1. First understand what add_conditional_edges() does
+
+Conceptually, LangGraph lets you create edges like:
+
+A ───────────────→ B
+
+using:
+
+builder.add_edge("A", "B")
+
+That's an unconditional edge.
+
+It means:
+
+Whenever node A finishes, always execute node B.
+
+Your code has:
+
+builder.add_edge("tools", "chatbot")
+
+So:
+
+tools → chatbot
+
+always happens.
+
+With add_conditional_edges(), however, you are saying:
+
+             ┌──→ B
+A ── decision ┤
+             └──→ C
+
+The next node depends on some condition.
+
+That's what this does:
+
+builder.add_conditional_edges(
+    "chatbot",
+    tools_condition,
+    {"tools": "tools", END: "translator"}
+)
+2. Break the line into its three arguments
+
+Your call is:
+
+builder.add_conditional_edges(
+    "chatbot",
+    tools_condition,
+    {"tools": "tools", END: "translator"}
+)
+
+There are three arguments:
+
+Argument 1
+"chatbot"
+Argument 2
+tools_condition
+Argument 3
+{"tools": "tools", END: "translator"}
+
+Each has a different purpose.
+
+3. First argument: "chatbot"
+builder.add_conditional_edges("chatbot", ...)
+
+This tells LangGraph:
+
+The conditional decision should be made after the chatbot node executes.
+
+Your graph therefore reaches:
+
+START
+  ↓
+chatbot
+  ↓
+[make routing decision]
+
+So chatbot is the source node.
+
+It does NOT mean:
+
+"Call chatbot conditionally."
+
+It means:
+
+"When chatbot finishes, evaluate the routing function."
+
+4. Second argument: tools_condition
+
+This is the most important part.
+
+tools_condition
+
+is a routing function.
+
+In a typical LangGraph setup, tools_condition examines the current graph state, particularly the latest AI message, and determines whether the AI requested a tool call.
+
+Conceptually, it does something like:
+
+def tools_condition(state):
+    if last_message_has_tool_calls:
+        return "tools"
+
+    return END
+
+The actual implementation is more sophisticated, but this is the important mental model.
+
+So after:
+
+chatbot
+
+finishes, LangGraph effectively asks:
+
+"Did the chatbot request a tool?"
+
+If yes:
+
+"tools"
+
+If no:
+
+END
+5. Third argument: the dictionary
+
+This is:
+
+{"tools": "tools", END: "translator"}
+
+This is the routing map.
+
+It tells LangGraph:
+
+"Whatever value the routing function returns, use this dictionary to determine which node to execute."
+
+Think of it as:
+
+routing_result → destination_node
+
+Specifically:
+
+tools → tools
+END   → translator
+
+That's why the dictionary has two sides.
+
+6. The left side and right side mean different things
+
+This is extremely important.
+
+Look at:
+
+{"tools": "tools", END: "translator"}
+
+The first "tools" and second "tools" have different conceptual roles.
+
+Left side
+"tools"
+
+means:
+
+The value returned by tools_condition.
+
+Right side
+"tools"
+
+means:
+
+The node that LangGraph should execute.
+
+So:
+
+"tools": "tools"
+
+means:
+
+if tools_condition(...) returns "tools":
+        go to node "tools"
+
+Now look at:
+
+END: "translator"
+
+This means:
+
+if tools_condition(...) returns END:
+        go to node "translator"
+
+This is a very important point because END on the left does not mean "stop the graph" in this routing map.
+
+You're mapping the condition result END to the node "translator".
+
+7. Your graph therefore behaves like this
+
+With your complete code:
+
+builder.add_node("chatbot", chatbot_node)
+builder.add_node("tools", ToolNode(tools))
+builder.add_node("translator", translator_node)
+
+builder.add_edge(START, "chatbot")
+
+builder.add_conditional_edges(
+    "chatbot",
+    tools_condition,
+    {"tools": "tools", END: "translator"}
+)
+
+builder.add_edge("tools", "chatbot")
+builder.add_edge("translator", END)
+
+graph = builder.compile()
+
+The graph is effectively:
+
+                    ┌───────────────┐
+                    │               │
+                    │   chatbot     │
+                    │               │
+                    └───────┬───────┘
+                            │
+                            ▼
+                    tools_condition
+                            │
+                ┌───────────┴───────────┐
+                │                       │
+          returns "tools"          returns END
+                │                       │
+                ▼                       ▼
+        ┌──────────────┐        ┌──────────────┐
+        │    tools     │        │  translator  │
+        └──────┬───────┘        └──────┬───────┘
+               │                       │
+               │                       ▼
+               │                      END
+               │
+               ▼
+            chatbot
+
+This creates a loop between chatbot and tools.
+
+8. Let's run through an actual example
+
+Suppose the user asks:
+
+What are the ingredients in kheer?
+
+Your chatbot_node might produce:
+
+AIMessage(
+    content="",
+    tool_calls=[
+        {
+            "name": "google_serper",
+            "args": {
+                "query": "ingredients in kheer"
+            }
+        }
+    ]
+)
+
+Notice:
+
+tool_calls != []
+
+The chatbot is saying:
+
+I need to use a tool.
+
+Step 1 — chatbot executes
+START
+  ↓
+chatbot
+
+The chatbot generates the AI message containing:
+
+tool_calls=[
+    {
+        "name": "google_serper",
+        ...
+    }
+]
+Step 2 — tools_condition executes
+
+LangGraph evaluates:
+
+tools_condition(state)
+
+Conceptually:
+
+if state["messages"][-1].tool_calls:
+    return "tools"
+
+So:
+
+tools_condition(...)
+
+returns:
+
+"tools"
+9. Now the dictionary becomes important
+
+You have:
+
+{
+    "tools": "tools",
+    END: "translator"
+}
+
+LangGraph receives:
+
+"tools"
+
+from tools_condition.
+
+It looks in the dictionary:
+
+mapping["tools"]
+
+and gets:
+
+"tools"
+
+Therefore:
+
+chatbot
+   ↓
+tools
+10. Then your ToolNode executes
+
+You have:
+
+builder.add_node("tools", ToolNode(tools))
+
+So:
+
+tools
+
+is a ToolNode.
+
+It sees the tool call:
+
+{
+    "name": "google_serper",
+    "args": {
+        "query": "ingredients in kheer"
+    }
+}
+
+and executes the appropriate tool.
+
+The result gets added to the messages.
+
+For example:
+
+ToolMessage(
+    content="Rice, milk, sugar...",
+    ...
+)
+11. Then this edge executes
+
+You have:
+
+builder.add_edge("tools", "chatbot")
+
+Therefore:
+
+tools
+ ↓
+chatbot
+
+The chatbot now sees the tool result.
+
+So the graph goes:
+
+START
+  ↓
+chatbot
+  ↓
+tools_condition
+  ↓
+tools
+  ↓
+chatbot
+12. The chatbot now has another chance to respond
+
+After seeing:
+
+Tool result:
+Rice kheer is made with rice, milk, sugar...
+
+the chatbot might produce:
+
+AIMessage(
+    content="Kheer is typically made with rice, milk, sugar...",
+    tool_calls=[]
+)
+
+This time:
+
+tool_calls == []
+13. tools_condition runs again
+
+Because we still have:
+
+builder.add_conditional_edges(
+    "chatbot",
+    tools_condition,
+    {"tools": "tools", END: "translator"}
+)
+
+LangGraph again executes:
+
+tools_condition(state)
+
+This time it returns:
+
+END
+
+because there are no tool calls.
+
+14. Now the surprising part
+
+Your routing dictionary says:
+
+END: "translator"
+
+Therefore:
+
+tools_condition returns END
+             ↓
+dictionary maps END → "translator"
+             ↓
+execute translator
+
+So the graph goes:
+
+chatbot
+   ↓
+tools_condition
+   ↓
+END result
+   ↓
+translator
+
+It does NOT terminate at this point.
+
+That's because you've explicitly mapped that condition result to:
+
+"translator"
+15. Then translator runs
+
+You have:
+
+builder.add_node("translator", translator_node)
+
+So:
+
+translator
+
+executes.
+
+And then:
+
+builder.add_edge("translator", END)
+
+means:
+
+translator
+    ↓
+   END
+
+Now the graph actually terminates.
+
+16. Why would you write END: "translator"?
+
+This is the key purpose of your modification.
+
+The standard LangGraph pattern is often:
+
+builder.add_conditional_edges(
+    "chatbot",
+    tools_condition,
+)
+
+which essentially gives you:
+
+chatbot
+   │
+   ├── tool call → tools
+   │                ↓
+   │             chatbot
+   │
+   └── no tool → END
+
+But you want to insert your translator before the graph terminates.
+
+So you're effectively trying to change:
+
+chatbot
+   │
+   └── no tools → END
+
+into:
+
+chatbot
+   │
+   └── no tools → translator → END
+
+And that's exactly what your mapping attempts to accomplish:
+
+{
+    "tools": "tools",
+    END: "translator"
+}
+17. Think of the dictionary as a switch statement
+
+A very useful way to understand this is as a Python-like switch/match.
+
+Your routing function:
+
+tools_condition(state)
+
+returns either:
+
+"tools"
+
+or:
+
+END
+
+Then your mapping behaves conceptually like:
+
+result = tools_condition(state)
+
+if result == "tools":
+    next_node = "tools"
+
+elif result == END:
+    next_node = "translator"
+
+Then LangGraph executes:
+
+next_node
+
+So:
+
+tools_condition
+       │
+       ▼
+    result
+       │
+       ├── "tools" ───────→ tools
+       │
+       └── END ───────────→ translator
+18. Why do we need the dictionary at all?
+
+You might wonder:
+
+If tools_condition already returns "tools" or END, why do we need the mapping?
+
+Because the return value and destination node don't necessarily have to be the same.
+
+For example, you could do:
+
+builder.add_conditional_edges(
+    "chatbot",
+    tools_condition,
+    {
+        "tools": "my_tool_node",
+        END: "translation_node"
+    }
+)
+
+Now the routing would be:
+
+tools_condition returns "tools"
+              ↓
+       "my_tool_node"
+
+and:
+
+tools_condition returns END
+              ↓
+       "translation_node"
+
+The left side is the routing label.
+
+The right side is the graph node.
+
+19. Your mapping could therefore be renamed conceptually
+
+This:
+
+{"tools": "tools", END: "translator"}
+
+could be mentally written as:
+
+{
+    "WHEN_CONDITION_RETURNS_TOOLS": "RUN_TOOLS_NODE",
+    "WHEN_CONDITION_RETURNS_END": "RUN_TRANSLATOR_NODE"
+}
+
+Obviously that's not valid LangGraph syntax, but conceptually it makes the distinction much clearer.
+
+20. There's another important issue in your code
+
+You currently have:
+
+builder.add_conditional_edges("chatbot", tools_condition)
+
+and then immediately after it:
+
+builder.add_conditional_edges(
+    "chatbot",
+    tools_condition,
+    {"tools": "tools", END: "translator"}
+)
+
+You should pay attention to this.
+
+You have added two conditional edge definitions from chatbot using the same routing function.
+
+So you should not keep both.
+
+You currently have:
+
+builder.add_conditional_edges("chatbot", tools_condition)
+
+# builder.add_edge("chatbot", "translator")
+
+builder.add_conditional_edges(
+    "chatbot",
+    tools_condition,
+    {"tools": "tools", END: "translator"}
+)
+
+The first one is unnecessary if your intention is to use the second mapping.
+
+I would structure it as:
+
+builder.add_node("chatbot", chatbot_node)
+builder.add_node("tools", ToolNode(tools))
+builder.add_node("translator", translator_node)
+
+builder.add_edge(START, "chatbot")
+
+builder.add_conditional_edges(
+    "chatbot",
+    tools_condition,
+    {
+        "tools": "tools",
+        END: "translator",
+    }
+)
+
+builder.add_edge("tools", "chatbot")
+builder.add_edge("translator", END)
+
+graph = builder.compile()
+21. Your complete execution flow
+
+With that cleaned-up version, your graph is:
+
+                       ┌─────────────────┐
+                       │                 │
+                       │     CHATBOT     │
+                       │                 │
+                       └────────┬────────┘
+                                │
+                                ▼
+                       ┌─────────────────┐
+                       │ tools_condition │
+                       └────────┬────────┘
+                                │
+                    ┌───────────┴───────────┐
+                    │                       │
+             tool call exists          no tool call
+                    │                       │
+                    ▼                       ▼
+               "tools"                     END
+                    │                       │
+                    ▼                       ▼
+             ┌─────────────┐         ┌────────────┐
+             │    TOOLS    │         │ TRANSLATOR │
+             └──────┬──────┘         └─────┬──────┘
+                    │                       │
+                    │                       ▼
+                    │                      END
+                    │
+                    ▼
+                 CHATBOT
+                    │
+                    └───────────────┐
+                                    │
+                                    ▼
+                            tools_condition
+
+This is essentially an agent/tool execution loop followed by translation.
+
+22. One subtle but important point about END
+
+END is a special LangGraph sentinel.
+
+Normally:
+
+END
+
+means:
+
+terminate execution.
+
+But in this:
+
+{
+    END: "translator"
+}
+
+you're using END as a possible return value from the routing function, then mapping it to another node.
+
+So don't read:
+
+END: "translator"
+
+as:
+
+"End the graph and then run translator."
+
+That's not what's happening.
+
+Read it as:
+
+"When tools_condition produces its END result, route to the translator node instead."
+
+Then this line:
+
+builder.add_edge("translator", END)
+
+is what actually terminates the graph.
+
+23. Relating this directly to your previous JSON
+
+You previously showed two different situations.
+
+Case 1 — chatbot generated a tool call
+
+You had:
+
+tool_calls=[
+    {
+        'name': 'google_serper',
+        'args': {
+            'query': 'ingredients in kheer'
+        }
+    }
+]
+
+Therefore:
+
+chatbot
+   ↓
+tools_condition
+   ↓
+"tools"
+   ↓
+tools
+
+Then:
+
+tools
+ ↓
+chatbot
+Case 2 — chatbot didn't generate a tool call
+
+You showed:
+
+tool_calls=[]
+
+Therefore:
+
+chatbot
+   ↓
+tools_condition
+   ↓
+END
+   ↓
+translator
+   ↓
+END
+
+That's precisely where your mapping:
+
+END: "translator"
+
+becomes relevant.
+
+24. In one sentence
+
+This:
+
+builder.add_conditional_edges(
+    "chatbot",
+    tools_condition,
+    {"tools": "tools", END: "translator"}
+)
+
+means:
+
+After chatbot finishes, call tools_condition; if it returns "tools", execute the tools node, and if it returns END, execute the translator node instead.
+
+And because you subsequently have:
+
+builder.add_edge("tools", "chatbot")
+builder.add_edge("translator", END)
+
+your overall workflow becomes:
+
+                    tool needed?
+                         │
+                         ▼
+START → CHATBOT ────── DECISION
+           ▲             │
+           │        ┌────┴────┐
+           │        │         │
+           │       YES       NO
+           │        │         │
+           │        ▼         ▼
+           └──── TOOLS    TRANSLATOR
+                  │            │
+                  └→ CHATBOT   ↓
+                              END
+
+That is the core architecture of your graph: the chatbot can repeatedly call tools, and once it no longer requests a tool, execution proceeds to your translator and then terminates.
