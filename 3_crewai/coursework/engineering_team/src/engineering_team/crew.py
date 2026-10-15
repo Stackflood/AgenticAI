@@ -16,12 +16,13 @@ class EngineeringTeam:
     tasks: list[Task]
 
     llm = LLM(
-        model="ollama/qwen3:8b",
+        model="ollama/gemma4:e4b-it-q4_K_M",
         timeout=18000,
         temperature=0.2,
         extra_body={
         "options": {
-            "num_ctx": 8192
+            "num_ctx": 8192,
+            "num_predict": 1024
             }
         }
     )

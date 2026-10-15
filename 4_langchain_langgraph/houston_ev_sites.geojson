@@ -1,0 +1,56 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -95.4619843,
+          29.749106
+        ]
+      },
+      "properties": {
+        "network": "ChargePoint",
+        "name": "ChargePoint",
+        "address": null,
+        "stalls": "2",
+        "osm_id": "node/7179588798"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -95.395828,
+          29.6892238
+        ]
+      },
+      "properties": {
+        "network": "ChargePoint",
+        "name": "ChargePoint",
+        "address": null,
+        "stalls": null,
+        "osm_id": "node/12535500401"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -95.39982,
+          29.77322
+        ]
+      },
+      "properties": {
+        "network": "Electrify America",
+        "name": "Electrify America",
+        "address": null,
+        "stalls": "6",
+        "osm_id": "node/14125452863"
+      }
+    }
+  ]
+}

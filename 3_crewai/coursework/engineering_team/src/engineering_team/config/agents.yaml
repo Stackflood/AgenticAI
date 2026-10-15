@@ -13,7 +13,7 @@ engineering_lead:
   backstory: >
     You're a seasoned engineering lead with a knack for writing clear and concise designs.
   max_execution_time: 18000
-  llm: ollama/qwen3:8b
+  llm: ollama/gemma4:e4b-it-q4_K_M
 
 
 backend_engineer:
@@ -27,7 +27,7 @@ backend_engineer:
     You're a seasoned python engineer with a knack for writing clean, efficient code.
     You follow the design instructions carefully.
   max_execution_time: 18000
-  llm:  ollama/qwen3:8b
+  llm:  ollama/gemma4:e4b-it-q4_K_M
   # llm: openrouter/google/gemini-3.1-pro-preview
 
 frontend_engineer:
@@ -43,7 +43,7 @@ frontend_engineer:
     You're a seasoned python engineer highly skilled at writing simple Gradio UIs for a backend class.
     You produce a simple gradio UI that demonstrates the given backend class; you write the gradio UI to the sandbox.
   max_execution_time: 18000
-  llm: ollama/qwen3:8b
+  llm: ollama/gemma4:e4b-it-q4_K_M
   # llm: openrouter/anthropic/claude-opus-4-7
 
 test_engineer:
@@ -55,4 +55,4 @@ test_engineer:
   backstory: >
     You're a seasoned QA engineer and software developer who writes great unit tests for python code.
   max_execution_time: 18000
-  llm: ollama/qwen3:8b
+  llm: ollama/gemma4:e4b-it-q4_K_M

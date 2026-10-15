@@ -1,0 +1,29 @@
+[
+  {
+    "network": "ChargePoint",
+    "name": "ChargePoint",
+    "address": null,
+    "lat": 29.749106,
+    "lng": -95.4619843,
+    "stalls": "2",
+    "osm_id": "node/7179588798"
+  },
+  {
+    "network": "ChargePoint",
+    "name": "ChargePoint",
+    "address": null,
+    "lat": 29.6892238,
+    "lng": -95.395828,
+    "stalls": null,
+    "osm_id": "node/12535500401"
+  },
+  {
+    "network": "Electrify America",
+    "name": "Electrify America",
+    "address": null,
+    "lat": 29.77322,
+    "lng": -95.39982,
+    "stalls": "6",
+    "osm_id": "node/14125452863"
+  }
+]
